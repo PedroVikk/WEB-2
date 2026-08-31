@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ObjectLiteral } from "typeorm";
-import { BaseController } from "../controller/BaseController";
+import { BaseController } from "../controllers/BaseController";
 
 /**
  * Monta as 5 rotas padrão de CRUD para um controller.

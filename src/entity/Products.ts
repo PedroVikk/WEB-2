@@ -4,18 +4,16 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
 } from "typeorm";
-import { ProductSituation } from "./ProductSituation";
-import { ProductCategory } from "./ProductCategory";
+import { ProductSituation } from "./ProductSituations";
+import { ProductCategory } from "./ProductCategories";
 
 @Entity("products")
 export class Product {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: "varchar", length: 255 })
+  @Column()
   name!: string;
 
   @Column({ type: "int" })
@@ -32,9 +30,13 @@ export class Product {
   @JoinColumn({ name: "productCategoryId" })
   productCategory!: ProductCategory;
 
-  @CreateDateColumn()
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt!: Date;
 
-  @UpdateDateColumn()
+  @Column({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
+  })
   updatedAt!: Date;
 }

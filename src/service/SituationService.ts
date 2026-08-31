@@ -1,5 +1,5 @@
 import { AppDataSource } from "../data-source";
-import { Situation } from "../entity/Situation";
+import { Situation } from "../entity/Situations";
 import { BaseService } from "./BaseService";
 
 export class SituationService extends BaseService<Situation> {

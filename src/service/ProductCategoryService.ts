@@ -1,5 +1,5 @@
 import { AppDataSource } from "../data-source";
-import { ProductCategory } from "../entity/ProductCategory";
+import { ProductCategory } from "../entity/ProductCategories";
 import { BaseService } from "./BaseService";
 
 export class ProductCategoryService extends BaseService<ProductCategory> {

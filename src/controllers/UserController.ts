@@ -1,6 +1,6 @@
 import { DeepPartial } from "typeorm";
 import { BaseController } from "./BaseController";
-import { User } from "../entity/User";
+import { User } from "../entity/Users";
 import { UserService } from "../service/UserService";
 
 export class UserController extends BaseController<User> {

@@ -1,29 +1,39 @@
+//Importa a biblioteca express
+import express from "express";
+//Importa a metadata (necessaria para os decorators do TypeORM)
 import "reflect-metadata";
-import express, { Request, Response } from "express";
+//Importa e carrega as variaveis de ambiente
 import dotenv from "dotenv";
+dotenv.config();
+
+//Importa a conexao com o banco de dados e as rotas da API
 import { AppDataSource } from "./data-source";
 import { routes } from "./routes";
 
-dotenv.config({ quiet: true });
-
+//Cria a aplicacao express
 const app = express();
+//Habilita o recebimento de JSON no corpo das requisicoes
 app.use(express.json());
 
-app.get("/", (_req: Request, res: Response) => {
-  res.json({ message: "API NodeJS/Express rodando!" });
+//Rota raiz de boas-vindas
+app.get("/", (req, res) => {
+  res.send("API NodeJS/Express rodando!");
 });
 
+//Registra as rotas dos recursos da API
 app.use(routes);
 
-const PORT = process.env.SERVER_PORT || 3000;
-
+//Inicializa a conexao com o BD e, em seguida, sobe o servidor
 AppDataSource.initialize()
   .then(() => {
-    console.log("Banco de dados conectado com sucesso!");
-    app.listen(PORT, () => {
-      console.log(`Servidor rodando na porta ${PORT}`);
+    console.log("Conexao com o BD sucedida!");
+
+    app.listen(process.env.PORT, () => {
+      console.log(
+        `Servidor iniciado na porta ${process.env.PORT}: http://localhost:${process.env.PORT}`
+      );
     });
   })
   .catch((error) => {
-    console.error("Erro ao conectar com o banco de dados:", error);
+    console.log("Erro na conexao com o BD.", error);
   });

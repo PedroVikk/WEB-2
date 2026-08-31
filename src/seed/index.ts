@@ -1,9 +1,9 @@
 import { DataSource } from "typeorm";
-import { Situation } from "../entity/Situation";
-import { User } from "../entity/User";
-import { ProductCategory } from "../entity/ProductCategory";
-import { ProductSituation } from "../entity/ProductSituation";
-import { Product } from "../entity/Product";
+import { Situation } from "../entity/Situations";
+import { User } from "../entity/Users";
+import { ProductCategory } from "../entity/ProductCategories";
+import { ProductSituation } from "../entity/ProductSituations";
+import { Product } from "../entity/Products";
 
 /**
  * Popula as tabelas com registros de teste.

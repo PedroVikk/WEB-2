@@ -1,17 +1,17 @@
 import { DeepPartial } from "typeorm";
 import { BaseController } from "./BaseController";
-import { ProductCategory } from "../entity/ProductCategory";
-import { ProductCategoryService } from "../service/ProductCategoryService";
+import { ProductSituation } from "../entity/ProductSituations";
+import { ProductSituationService } from "../service/ProductSituationService";
 
-export class ProductCategoryController extends BaseController<ProductCategory> {
+export class ProductSituationController extends BaseController<ProductSituation> {
   constructor() {
-    super(new ProductCategoryService());
+    super(new ProductSituationService());
   }
 
   protected pickBody(
     body: Record<string, unknown>
-  ): DeepPartial<ProductCategory> {
-    const data: DeepPartial<ProductCategory> = {};
+  ): DeepPartial<ProductSituation> {
+    const data: DeepPartial<ProductSituation> = {};
 
     if (body.name !== undefined) {
       data.name = String(body.name);

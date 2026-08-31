@@ -4,20 +4,18 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
 } from "typeorm";
-import { Situation } from "./Situation";
+import { Situation } from "./Situations";
 
 @Entity("users")
 export class User {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: "varchar", length: 255 })
+  @Column()
   name!: string;
 
-  @Column({ type: "varchar", length: 255 })
+  @Column({ unique: true })
   email!: string;
 
   @Column({ type: "int" })
@@ -27,9 +25,13 @@ export class User {
   @JoinColumn({ name: "situationId" })
   situation!: Situation;
 
-  @CreateDateColumn()
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt!: Date;
 
-  @UpdateDateColumn()
+  @Column({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
+  })
   updatedAt!: Date;
 }

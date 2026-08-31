@@ -2,18 +2,23 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 
-dotenv.config({ quiet: true });
+//Carrega as variaveis de ambiente (necessario tambem quando o data-source e usado pelo CLI)
+dotenv.config();
 
+//Dialeto do banco; usa "mysql" como padrao caso a variavel nao esteja definida
+const dialect = process.env.DB_DIALECT ?? "mysql";
+
+//Credenciais e configuracao da conexao com o banco de dados
 export const AppDataSource = new DataSource({
-  type: "mysql",
+  type: dialect as "mysql",
   host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT) || 3306,
+  port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306,
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   synchronize: false,
-  logging: false,
+  logging: true,
   entities: ["dist/entity/**/*.js"],
-  migrations: ["dist/migration/**/*.js"],
   subscribers: [],
+  migrations: ["dist/migration/**/*.js"],
 });

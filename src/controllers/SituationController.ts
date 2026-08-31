@@ -1,6 +1,6 @@
 import { DeepPartial } from "typeorm";
 import { BaseController } from "./BaseController";
-import { Situation } from "../entity/Situation";
+import { Situation } from "../entity/Situations";
 import { SituationService } from "../service/SituationService";
 
 export class SituationController extends BaseController<Situation> {

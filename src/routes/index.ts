@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { crudRouter } from "./crudRouter";
-import { SituationController } from "../controller/SituationController";
-import { UserController } from "../controller/UserController";
-import { ProductCategoryController } from "../controller/ProductCategoryController";
-import { ProductSituationController } from "../controller/ProductSituationController";
-import { ProductController } from "../controller/ProductController";
+import { SituationController } from "../controllers/SituationController";
+import { UserController } from "../controllers/UserController";
+import { ProductCategoryController } from "../controllers/ProductCategoryController";
+import { ProductSituationController } from "../controllers/ProductSituationController";
+import { ProductController } from "../controllers/ProductController";
 
 const routes = Router();
 

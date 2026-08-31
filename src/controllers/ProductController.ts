@@ -1,6 +1,6 @@
 import { DeepPartial } from "typeorm";
 import { BaseController } from "./BaseController";
-import { Product } from "../entity/Product";
+import { Product } from "../entity/Products";
 import { ProductService } from "../service/ProductService";
 
 export class ProductController extends BaseController<Product> {
