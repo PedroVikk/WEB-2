@@ -13,6 +13,18 @@ atividade, contemplando:
 * Seeds
 * Services (Pagination)
 
+## Endpoints - CRUD de Produtos
+
+| Método | Rota             | Descrição                        | Corpo (JSON)                                  |
+|--------|------------------|----------------------------------|----------------------------------------------|
+| GET    | `/products`      | Lista todos os produtos          | -                                            |
+| GET    | `/products/:id`  | Busca um produto pelo id         | -                                            |
+| POST   | `/products`      | Cadastra um novo produto         | `{ "name", "description", "price", "quantity" }` |
+| PUT    | `/products/:id`  | Atualiza um produto existente    | `{ "name", "description", "price", "quantity" }` |
+| DELETE | `/products/:id`  | Remove um produto                | -                                            |
+
+Estrutura em camadas: `routes` -> `controller` -> `service` -> `entity` (TypeORM).
+
 ## Requisitos
 
 * Node.js 22 ou superior - Conferir a versão: node -v
