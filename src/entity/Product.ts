@@ -2,9 +2,13 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  ManyToOne,
+  JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { ProductSituation } from "./ProductSituation";
+import { ProductCategory } from "./ProductCategory";
 
 @Entity("products")
 export class Product {
@@ -14,18 +18,23 @@ export class Product {
   @Column({ type: "varchar", length: 255 })
   name!: string;
 
-  @Column({ type: "text", nullable: true })
-  description!: string | null;
+  @Column({ type: "int" })
+  productSituationId!: number;
 
-  @Column({ type: "decimal", precision: 10, scale: 2, default: 0 })
-  price!: number;
+  @Column({ type: "int" })
+  productCategoryId!: number;
 
-  @Column({ type: "int", default: 0 })
-  quantity!: number;
+  @ManyToOne(() => ProductSituation, (productSituation) => productSituation.products)
+  @JoinColumn({ name: "productSituationId" })
+  productSituation!: ProductSituation;
 
-  @CreateDateColumn({ name: "created_at" })
+  @ManyToOne(() => ProductCategory, (productCategory) => productCategory.products)
+  @JoinColumn({ name: "productCategoryId" })
+  productCategory!: ProductCategory;
+
+  @CreateDateColumn()
   createdAt!: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn()
   updatedAt!: Date;
 }

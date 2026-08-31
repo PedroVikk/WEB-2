@@ -1,0 +1,9 @@
+import { AppDataSource } from "../data-source";
+import { Situation } from "../entity/Situation";
+import { BaseService } from "./BaseService";
+
+export class SituationService extends BaseService<Situation> {
+  constructor() {
+    super(AppDataSource.getRepository(Situation));
+  }
+}

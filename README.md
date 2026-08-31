@@ -13,17 +13,67 @@ atividade, contemplando:
 * Seeds
 * Services (Pagination)
 
-## Endpoints - CRUD de Produtos
+## Modelo de dados (diagrama)
 
-| Método | Rota             | Descrição                        | Corpo (JSON)                                  |
-|--------|------------------|----------------------------------|----------------------------------------------|
-| GET    | `/products`      | Lista todos os produtos          | -                                            |
-| GET    | `/products/:id`  | Busca um produto pelo id         | -                                            |
-| POST   | `/products`      | Cadastra um novo produto         | `{ "name", "description", "price", "quantity" }` |
-| PUT    | `/products/:id`  | Atualiza um produto existente    | `{ "name", "description", "price", "quantity" }` |
-| DELETE | `/products/:id`  | Remove um produto                | -                                            |
+| Tabela                | Colunas                                                              | Relação                              |
+|-----------------------|--------------------------------------------------------------------- |--------------------------------------|
+| `situations`          | id, nameSituation, createdAt, updatedAt                             | 1 : N com `users`                    |
+| `users`               | id, name, email, situationId, createdAt, updatedAt                  | N : 1 com `situations`               |
+| `product_categories`  | id, name, createdAt, updatedAt                                      | 1 : N com `products`                 |
+| `product_situations`  | id, name, createdAt, updatedAt                                      | 1 : N com `products`                 |
+| `products`            | id, name, productSituationId, productCategoryId, createdAt, updatedAt | N : 1 com `product_situations` e `product_categories` |
 
-Estrutura em camadas: `routes` -> `controller` -> `service` -> `entity` (TypeORM).
+## Arquitetura
+
+```
+src/
+  entity/       -> Models / Entitys (TypeORM)
+  migration/    -> Migrations (criação das tabelas + FKs)
+  service/      -> Regras de negócio (BaseService com paginação)
+  controller/   -> Camada HTTP (BaseController genérico de CRUD)
+  routes/       -> Rotas REST (crudRouter monta as 5 rotas por recurso)
+  seed/         -> Seeds (registros de teste)
+  helper/       -> Paginação
+  data-source.ts, index.ts, run-seeds.ts
+```
+
+## Endpoints (CRUD)
+
+Recursos: `/situations`, `/users`, `/product-categories`, `/product-situations`, `/products`.
+Cada recurso expõe o CRUD completo:
+
+| Método | Rota            | Descrição                         |
+|--------|-----------------|-----------------------------------|
+| GET    | `/<recurso>`    | Lista **paginada**                |
+| GET    | `/<recurso>/:id`| Busca por id                      |
+| POST   | `/<recurso>`    | Cadastra                          |
+| PUT    | `/<recurso>/:id`| Atualiza                          |
+| DELETE | `/<recurso>/:id`| Remove                            |
+
+Corpo (JSON) para POST/PUT:
+
+* `situations` -> `{ "nameSituation": "Ativo" }`
+* `users` -> `{ "name": "João", "email": "joao@ex.com", "situationId": 1 }`
+* `product_categories` -> `{ "name": "Eletrônicos" }`
+* `product_situations` -> `{ "name": "Disponível" }`
+* `products` -> `{ "name": "Notebook", "productSituationId": 1, "productCategoryId": 1 }`
+
+### Paginação (Services)
+
+A listagem aceita os query params `page` (padrão `1`) e `limit` (padrão `10`, máx. `100`):
+
+```
+GET /products?page=2&limit=5
+```
+
+Resposta:
+
+```json
+{
+  "data": [ ... ],
+  "meta": { "total": 42, "page": 2, "limit": 5, "lastPage": 9 }
+}
+```
 
 ## Requisitos
 

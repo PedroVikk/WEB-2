@@ -6,7 +6,10 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "start:watch": "concurrently \"npx tsc --watch\" \"node --watch ./dist/index.js\""
+    "start:watch": "concurrently \"npx tsc --watch\" \"node --watch ./dist/index.js\"",
+    "migration:run": "typeorm migration:run -d dist/data-source.js",
+    "migration:revert": "typeorm migration:revert -d dist/data-source.js",
+    "seed": "node dist/run-seeds.js"
   },
   "keywords": [
     "nodejs",
