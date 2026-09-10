@@ -28,20 +28,154 @@ Instalar todas as dependencias indicada pelo package.json.
 npm install
 ```
 
-Compilar o arquivo TypeScript. Executar o arquivo gerado.
+Criar a base de dados no MySQL (o mesmo nome que estiver no DB_DATABASE do .env).
 ```
-npm run start:watch
+CREATE DATABASE nodeapi CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 Executar as migrations para criar as tabelas no banco de dados.
 ```
-npx typeorm migration:run -d dist/data-source.js
+npm run migration:run
 ```
 
-Executar as seeds para cadastrar registro de teste nas tabelas no banco de dados.
+Executar as seeds para cadastrar registros de teste nas tabelas.
 ```
-node dist/run-seeds.js
+npm run seed
 ```
+
+Rodar a API em modo de desenvolvimento.
+```
+npm run dev
+```
+
+Ou compilar e rodar o arquivo gerado.
+```
+npm run build
+npm start
+```
+
+Outros comandos uteis:
+```
+npm run migration:show     (mostra quais migrations ja rodaram)
+npm run migration:revert   (desfaz a ultima migration)
+npm run start:watch        (compila e reinicia a cada alteracao)
+```
+
+## Estrutura do projeto
+
+```
+src/
+ ├── controller/   -> recebem a requisicao e devolvem a resposta em JSON
+ ├── entity/       -> models/entities do TypeORM (tabelas do diagrama)
+ ├── helper/       -> paginacao e classe de erro da aplicacao
+ ├── middleware/   -> tratamento de erro e rota nao encontrada
+ ├── migration/    -> criacao das tabelas e chaves estrangeiras
+ ├── routes/       -> arquivos de rota de cada recurso
+ ├── seed/         -> registros iniciais para teste
+ ├── service/      -> regras de negocio, validacoes e paginacao
+ ├── data-source.ts
+ └── index.ts
+```
+
+## Tabelas do diagrama
+
+| Tabela | Campos | Relacionamento |
+| --- | --- | --- |
+| situations | id, nameSituation, createdAt, updatedAt | 1 situacao tem varios usuarios |
+| users | id, name, email, situationId, createdAt, updatedAt | pertence a uma situacao |
+| product_categories | id, name, createdAt, updatedAt | 1 categoria tem varios produtos |
+| product_situations | id, name, createdAt, updatedAt | 1 situacao tem varios produtos |
+| products | id, name, productSituationId, productCategoryId, createdAt, updatedAt | pertence a uma categoria e a uma situacao |
+
+## Endpoints (CRUD)
+
+Todos os recursos possuem as mesmas cinco rotas:
+
+| Metodo | Rota | Descricao |
+| --- | --- | --- |
+| GET | /recurso | lista os registros (paginado) |
+| GET | /recurso/:id | busca um registro pelo id |
+| POST | /recurso | cadastra um registro |
+| PUT | /recurso/:id | altera um registro |
+| DELETE | /recurso/:id | exclui um registro |
+
+Recursos disponiveis: `/situations`, `/users`, `/product-categories`,
+`/product-situations` e `/products`.
+
+### Paginacao (Services)
+
+A paginacao fica no service de cada recurso e usa os parametros `page` e `limit`
+da URL. O `page` comeca em 1, o `limit` padrao e 10 e o maximo permitido e 100.
+
+```
+GET /products?page=2&limit=5
+```
+
+Resposta:
+
+```json
+{
+  "data": [
+    {
+      "id": 6,
+      "name": "Caneta Esferografica",
+      "productSituationId": 1,
+      "productCategoryId": 4,
+      "createdAt": "2026-09-10T18:00:00.000Z",
+      "updatedAt": "2026-09-10T18:00:00.000Z",
+      "productCategory": { "id": 4, "name": "Papelaria" },
+      "productSituation": { "id": 1, "name": "Disponivel" }
+    }
+  ],
+  "pagination": {
+    "total": 12,
+    "page": 2,
+    "limit": 5,
+    "totalPages": 3,
+    "hasPreviousPage": true,
+    "hasNextPage": true
+  }
+}
+```
+
+A rota de produtos ainda aceita filtro por categoria e por situacao:
+
+```
+GET /products?productCategoryId=1&productSituationId=2
+```
+
+### Exemplos de corpo das requisicoes
+
+Cadastrar situacao:
+```json
+{ "nameSituation": "Ativo" }
+```
+
+Cadastrar usuario:
+```json
+{ "name": "Pedro Victor", "email": "pedro@email.com", "situationId": 1 }
+```
+
+Cadastrar categoria ou situacao de produto:
+```json
+{ "name": "Informatica" }
+```
+
+Cadastrar produto:
+```json
+{ "name": "Notebook Dell", "productCategoryId": 1, "productSituationId": 1 }
+```
+
+### Erros
+
+Os erros voltam sempre no mesmo formato:
+
+```json
+{ "message": "Usuario nao encontrado." }
+```
+
+Status usados: 200 (ok), 201 (cadastrado), 204 (excluido), 400 (dados invalidos),
+404 (nao encontrado), 409 (e-mail repetido) e 500 (erro interno).
 
 ## Sequencia para criar projeto
 
