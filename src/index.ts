@@ -2,6 +2,8 @@ import "reflect-metadata";
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import { AppDataSource } from "./data-source";
+import routes from "./routes";
+import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
 dotenv.config();
 
@@ -11,8 +13,23 @@ app.use(express.json());
 const PORT = process.env.SERVER_PORT || 3000;
 
 app.get("/", (_req: Request, res: Response) => {
-  res.json({ message: "API NodeJS/Express rodando!" });
+  res.json({
+    message: "API NodeJS/Express rodando!",
+    rotas: [
+      "/situations",
+      "/users",
+      "/product-categories",
+      "/product-situations",
+      "/products",
+    ],
+  });
 });
+
+app.use(routes);
+
+// Middlewares de erro sempre por ultimo
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 AppDataSource.initialize()
   .then(() => {
