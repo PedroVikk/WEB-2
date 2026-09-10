@@ -6,7 +6,13 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "start:watch": "concurrently \"npx tsc --watch\" \"node --watch ./dist/index.js\""
+    "dev": "ts-node src/index.ts",
+    "start:watch": "concurrently \"npx tsc --watch\" \"node --watch ./dist/index.js\"",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migration:run": "typeorm-ts-node-commonjs migration:run -d src/data-source.ts",
+    "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/data-source.ts",
+    "migration:show": "typeorm-ts-node-commonjs migration:show -d src/data-source.ts",
+    "seed": "ts-node src/seed/index.ts"
   },
   "keywords": [
     "nodejs",
