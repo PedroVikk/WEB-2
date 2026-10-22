@@ -1,0 +1,2044 @@
+{
+  "info": {
+    "name": "NodeAPI - CRUD (Situacoes, Usuarios, Produtos)",
+    "description": "Testes de todas as rotas da API. Importe no Postman (Import > arquivo) e rode cada request ou a colecao inteira pelo Collection Runner.\n\nAntes de rodar: `npm run migration:run`, `npm run seed` e `npm run dev`.\n\nOs ids criados nos cadastros ficam salvos nas variaveis da colecao e sao usados nas requests seguintes. Usuarios e produtos usam os registros das seeds (id 1) como situacao e categoria.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "situationId",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "userEmail",
+      "value": ""
+    },
+    {
+      "key": "productCategoryId",
+      "value": ""
+    },
+    {
+      "key": "productSituationId",
+      "value": ""
+    },
+    {
+      "key": "productId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "0 - API",
+      "item": [
+        {
+          "name": "Status da API",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Lista as rotas disponiveis\", function () {",
+                  "    pm.expect(pm.response.json().rotas).to.include(\"/products\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": []
+            }
+          }
+        },
+        {
+          "name": "Erro - rota inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: Rota nao encontrada: GET /rota-inexistente\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"Rota nao encontrada: GET /rota-inexistente\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rota-inexistente",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rota-inexistente"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1 - Situacoes (situations)",
+      "item": [
+        {
+          "name": "Listar (paginado)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Retorna data e pagination\", function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.an(\"array\");",
+                  "    pm.expect(json.pagination).to.include.keys(\"total\", \"page\", \"limit\", \"totalPages\", \"hasPreviousPage\", \"hasNextPage\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/situations?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "situations"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cadastrar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Retorna o registro cadastrado\", function () {",
+                  "    pm.expect(json.id).to.be.a(\"number\");",
+                  "    pm.expect(json.nameSituation).to.eql(\"Pendente\");",
+                  "});",
+                  "pm.collectionVariables.set(\"situationId\", json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/situations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "situations"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nameSituation\": \"Pendente\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Buscar por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Retorna o registro pedido\", function () {",
+                  "    pm.expect(pm.response.json().id).to.eql(Number(pm.collectionVariables.get(\"situationId\")));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/situations/{{situationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "situations",
+                "{{situationId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Editar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Campo alterado\", function () {",
+                  "    pm.expect(pm.response.json().nameSituation).to.eql(\"Em analise\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/situations/{{situationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "situations",
+                "{{situationId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nameSituation\": \"Em analise\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Excluir",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/situations/{{situationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "situations",
+                "{{situationId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Erro - buscar registro excluido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: Situacao nao encontrada.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"Situacao nao encontrada.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/situations/{{situationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "situations",
+                "{{situationId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Erro - cadastrar sem nameSituation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: O campo nameSituation e obrigatorio.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"O campo nameSituation e obrigatorio.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/situations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "situations"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Erro - id invalido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: O id informado e invalido.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"O id informado e invalido.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/situations/abc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "situations",
+                "abc"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 - Usuarios (users)",
+      "item": [
+        {
+          "name": "Listar (paginado)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Retorna data e pagination\", function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.an(\"array\");",
+                  "    pm.expect(json.pagination).to.include.keys(\"total\", \"page\", \"limit\", \"totalPages\", \"hasPreviousPage\", \"hasNextPage\");",
+                  "});",
+                  "pm.test(\"Cada usuario vem com a situacao\", function () {",
+                  "    pm.response.json().data.forEach(function (user) {",
+                  "        pm.expect(user.situation).to.be.an(\"object\");",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cadastrar",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"userEmail\", \"postman\" + Date.now() + \"@email.com\");"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Retorna o usuario com a situacao\", function () {",
+                  "    pm.expect(json.email).to.eql(pm.collectionVariables.get(\"userEmail\"));",
+                  "    pm.expect(json.situation.id).to.eql(1);",
+                  "});",
+                  "pm.collectionVariables.set(\"userId\", json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "description": "O e-mail e gerado no pre-request para a request poder rodar varias vezes sem dar e-mail repetido.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Usuario Postman\",\n  \"email\": \"{{userEmail}}\",\n  \"situationId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Buscar por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Retorna o usuario pedido\", function () {",
+                  "    pm.expect(pm.response.json().id).to.eql(Number(pm.collectionVariables.get(\"userId\")));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{userId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Editar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Campos alterados\", function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.name).to.eql(\"Usuario Postman Editado\");",
+                  "    pm.expect(json.situationId).to.eql(2);",
+                  "    pm.expect(json.situation.id).to.eql(2);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{userId}}"
+              ]
+            },
+            "description": "Mantem o proprio e-mail: a validacao de e-mail repetido ignora o proprio usuario.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Usuario Postman Editado\",\n  \"email\": \"{{userEmail}}\",\n  \"situationId\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Erro - e-mail ja cadastrado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: Ja existe um usuario com esse e-mail.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"Ja existe um usuario com esse e-mail.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "description": "pedro@email.com vem da seed de usuarios.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Outro Pedro\",\n  \"email\": \"pedro@email.com\",\n  \"situationId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Erro - e-mail invalido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: O e-mail informado e invalido.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"O e-mail informado e invalido.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Usuario Postman\",\n  \"email\": \"email-sem-arroba\",\n  \"situationId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Erro - situacao inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: A situacao informada nao existe.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"A situacao informada nao existe.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Usuario Postman\",\n  \"email\": \"situacao@email.com\",\n  \"situationId\": 999999\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Erro - campos obrigatorios",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: Os campos name, email e situationId sao obrigatorios.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"Os campos name, email e situationId sao obrigatorios.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Usuario Postman\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Excluir",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{userId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Erro - buscar usuario excluido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: Usuario nao encontrado.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"Usuario nao encontrado.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{userId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 - Categorias de produto (product-categories)",
+      "item": [
+        {
+          "name": "Listar (paginado)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Retorna data e pagination\", function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.an(\"array\");",
+                  "    pm.expect(json.pagination).to.include.keys(\"total\", \"page\", \"limit\", \"totalPages\", \"hasPreviousPage\", \"hasNextPage\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/product-categories?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-categories"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cadastrar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Retorna o registro cadastrado\", function () {",
+                  "    pm.expect(json.id).to.be.a(\"number\");",
+                  "    pm.expect(json.name).to.eql(\"Esportes\");",
+                  "});",
+                  "pm.collectionVariables.set(\"productCategoryId\", json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/product-categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-categories"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Esportes\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Buscar por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Retorna o registro pedido\", function () {",
+                  "    pm.expect(pm.response.json().id).to.eql(Number(pm.collectionVariables.get(\"productCategoryId\")));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/product-categories/{{productCategoryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-categories",
+                "{{productCategoryId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Editar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Campo alterado\", function () {",
+                  "    pm.expect(pm.response.json().name).to.eql(\"Esporte e Lazer\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/product-categories/{{productCategoryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-categories",
+                "{{productCategoryId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Esporte e Lazer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Excluir",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/product-categories/{{productCategoryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-categories",
+                "{{productCategoryId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Erro - buscar registro excluido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: Categoria nao encontrada.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"Categoria nao encontrada.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/product-categories/{{productCategoryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-categories",
+                "{{productCategoryId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Erro - cadastrar sem name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: O campo name e obrigatorio.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"O campo name e obrigatorio.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/product-categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-categories"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Erro - id invalido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: O id informado e invalido.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"O id informado e invalido.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/product-categories/abc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-categories",
+                "abc"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4 - Situacoes de produto (product-situations)",
+      "item": [
+        {
+          "name": "Listar (paginado)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Retorna data e pagination\", function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.an(\"array\");",
+                  "    pm.expect(json.pagination).to.include.keys(\"total\", \"page\", \"limit\", \"totalPages\", \"hasPreviousPage\", \"hasNextPage\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/product-situations?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-situations"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cadastrar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Retorna o registro cadastrado\", function () {",
+                  "    pm.expect(json.id).to.be.a(\"number\");",
+                  "    pm.expect(json.name).to.eql(\"Em promocao\");",
+                  "});",
+                  "pm.collectionVariables.set(\"productSituationId\", json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/product-situations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-situations"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Em promocao\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Buscar por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Retorna o registro pedido\", function () {",
+                  "    pm.expect(pm.response.json().id).to.eql(Number(pm.collectionVariables.get(\"productSituationId\")));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/product-situations/{{productSituationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-situations",
+                "{{productSituationId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Editar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Campo alterado\", function () {",
+                  "    pm.expect(pm.response.json().name).to.eql(\"Em oferta\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/product-situations/{{productSituationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-situations",
+                "{{productSituationId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Em oferta\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Excluir",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/product-situations/{{productSituationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-situations",
+                "{{productSituationId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Erro - buscar registro excluido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: Situacao de produto nao encontrada.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"Situacao de produto nao encontrada.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/product-situations/{{productSituationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-situations",
+                "{{productSituationId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Erro - cadastrar sem name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: O campo name e obrigatorio.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"O campo name e obrigatorio.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/product-situations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-situations"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Erro - id invalido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: O id informado e invalido.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"O id informado e invalido.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/product-situations/abc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "product-situations",
+                "abc"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5 - Produtos (products)",
+      "item": [
+        {
+          "name": "Listar (paginado)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Retorna data e pagination\", function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.an(\"array\");",
+                  "    pm.expect(json.pagination).to.include.keys(\"total\", \"page\", \"limit\", \"totalPages\", \"hasPreviousPage\", \"hasNextPage\");",
+                  "});",
+                  "pm.test(\"Cada produto vem com categoria e situacao\", function () {",
+                  "    pm.response.json().data.forEach(function (product) {",
+                  "        pm.expect(product.productCategory).to.be.an(\"object\");",
+                  "        pm.expect(product.productSituation).to.be.an(\"object\");",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products?page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar pagina 2 com limit 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Retorna data e pagination\", function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.an(\"array\");",
+                  "    pm.expect(json.pagination).to.include.keys(\"total\", \"page\", \"limit\", \"totalPages\", \"hasPreviousPage\", \"hasNextPage\");",
+                  "});",
+                  "pm.test(\"Respeita page e limit\", function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.pagination.page).to.eql(2);",
+                  "    pm.expect(json.pagination.limit).to.eql(2);",
+                  "    pm.expect(json.pagination.hasPreviousPage).to.eql(true);",
+                  "    pm.expect(json.data.length).to.be.at.most(2);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products?page=2&limit=2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "2"
+                },
+                {
+                  "key": "limit",
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar com limit acima do maximo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Retorna data e pagination\", function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.an(\"array\");",
+                  "    pm.expect(json.pagination).to.include.keys(\"total\", \"page\", \"limit\", \"totalPages\", \"hasPreviousPage\", \"hasNextPage\");",
+                  "});",
+                  "pm.test(\"Limit fica no maximo 100\", function () {",
+                  "    pm.expect(pm.response.json().pagination.limit).to.eql(100);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products?limit=500",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "500"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filtrar por categoria e situacao",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Retorna data e pagination\", function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.an(\"array\");",
+                  "    pm.expect(json.pagination).to.include.keys(\"total\", \"page\", \"limit\", \"totalPages\", \"hasPreviousPage\", \"hasNextPage\");",
+                  "});",
+                  "pm.test(\"Todos os produtos sao da categoria 1 e situacao 1\", function () {",
+                  "    pm.response.json().data.forEach(function (product) {",
+                  "        pm.expect(product.productCategoryId).to.eql(1);",
+                  "        pm.expect(product.productSituationId).to.eql(1);",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products?productCategoryId=1&productSituationId=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "productCategoryId",
+                  "value": "1"
+                },
+                {
+                  "key": "productSituationId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cadastrar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Retorna o produto com categoria e situacao\", function () {",
+                  "    pm.expect(json.name).to.eql(\"Mouse Sem Fio\");",
+                  "    pm.expect(json.productCategory.id).to.eql(1);",
+                  "    pm.expect(json.productSituation.id).to.eql(1);",
+                  "});",
+                  "pm.collectionVariables.set(\"productId\", json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mouse Sem Fio\",\n  \"productCategoryId\": 1,\n  \"productSituationId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Buscar por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Retorna o produto pedido\", function () {",
+                  "    pm.expect(pm.response.json().id).to.eql(Number(pm.collectionVariables.get(\"productId\")));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Editar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Campos alterados\", function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.name).to.eql(\"Mouse Sem Fio Logitech\");",
+                  "    pm.expect(json.productCategory.id).to.eql(4);",
+                  "    pm.expect(json.productSituation.id).to.eql(2);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mouse Sem Fio Logitech\",\n  \"productCategoryId\": 4,\n  \"productSituationId\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Erro - categoria inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: A categoria informada nao existe.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"A categoria informada nao existe.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Produto Teste\",\n  \"productCategoryId\": 999999,\n  \"productSituationId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Erro - situacao de produto inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: A situacao de produto informada nao existe.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"A situacao de produto informada nao existe.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Produto Teste\",\n  \"productCategoryId\": 1,\n  \"productSituationId\": 999999\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Erro - campos obrigatorios",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: Os campos name, productSituationId e productCategoryId sao obrigatorios.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"Os campos name, productSituationId e productCategoryId sao obrigatorios.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Produto Teste\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Excluir",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Erro - buscar produto excluido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Mensagem de erro: Produto nao encontrado.\", function () {",
+                  "    pm.expect(pm.response.json().message).to.eql(\"Produto nao encontrado.\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

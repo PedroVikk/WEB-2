@@ -177,6 +177,31 @@ Os erros voltam sempre no mesmo formato:
 Status usados: 200 (ok), 201 (cadastrado), 204 (excluido), 400 (dados invalidos),
 404 (nao encontrado), 409 (e-mail repetido) e 500 (erro interno).
 
+## Testes no Postman
+
+Os testes de todas as rotas estao salvos em `postman/NodeAPI.postman_collection.json`.
+
+Importar no Postman (app ou extensao do VS Code): Import > selecionar o arquivo.
+
+Com a API rodando (`npm run migration:run`, `npm run seed` e `npm run dev`), e possivel
+executar cada request ou rodar a colecao inteira pelo Collection Runner. Cada request ja tem
+os testes (aba Tests) que conferem o status e o corpo da resposta.
+
+A colecao tem uma pasta por recurso, com listagem paginada, cadastro, busca por id, edicao,
+exclusao e os casos de erro (campo obrigatorio, id invalido, registro inexistente, e-mail
+repetido). Os ids criados nos cadastros ficam nas variaveis da colecao e sao usados nas
+requests seguintes. A URL da API fica na variavel `baseUrl` (padrao `http://localhost:3000`).
+
+### Evidencias da execucao
+
+A colecao foi executada inteira com o Newman (Postman pela linha de comando):
+48 requests e 96 testes, todos aprovados. O resultado esta em `postman/evidencias/`:
+
+* `prints/` -> um print de cada request (metodo, URL, body enviado, status, resposta e testes)
+* `relatorio-testes.html` -> relatorio completo, abrir no navegador
+* `relatorio-testes.xml` -> relatorio no formato JUnit
+* `saida-terminal.txt` -> saida do Newman no terminal
+
 ## Sequencia para criar projeto
 
 Criar o arquivo package
