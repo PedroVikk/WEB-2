@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="NodeAPI - CRUD (Situacoes, Usuarios, Produtos)" tests="48" time="0.627">
+  <testsuite name="0 - API / Status da API" id="9e6e4d63-330a-4c06-974b-efea29aa17a8" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.034">
+    <testcase name="Status 200" time="0.034" classname="0ApiStatusDaApi"/>
+    <testcase name="Lista as rotas disponiveis" time="0.034" classname="0ApiStatusDaApi"/>
+  </testsuite>
+  <testsuite name="0 - API / Erro - rota inexistente" id="059ba95d-5810-4511-a827-30f82007cc46" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.003">
+    <testcase name="Status 404" time="0.003" classname="0ApiErroRotaInexistente"/>
+    <testcase name="Mensagem de erro: Rota nao encontrada: GET /rota-inexistente" time="0.003" classname="0ApiErroRotaInexistente"/>
+  </testsuite>
+  <testsuite name="1 - Situacoes (situations) / Listar (paginado)" id="54c3d2fd-3f41-4a95-b08d-f1bbff2446e6" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.006">
+    <testcase name="Status 200" time="0.006" classname="1SituacoesSituationsListarPaginado"/>
+    <testcase name="Retorna data e pagination" time="0.006" classname="1SituacoesSituationsListarPaginado"/>
+  </testsuite>
+  <testsuite name="1 - Situacoes (situations) / Cadastrar" id="df930f2f-d52e-437c-8ed0-d354f55cecd2" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.047">
+    <testcase name="Status 201" time="0.047" classname="1SituacoesSituationsCadastrar"/>
+    <testcase name="Retorna o registro cadastrado" time="0.047" classname="1SituacoesSituationsCadastrar"/>
+  </testsuite>
+  <testsuite name="1 - Situacoes (situations) / Buscar por id" id="ac5f2327-0fdc-4090-bacd-633d770983ee" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="Status 200" time="0.004" classname="1SituacoesSituationsBuscarPorId"/>
+    <testcase name="Retorna o registro pedido" time="0.004" classname="1SituacoesSituationsBuscarPorId"/>
+  </testsuite>
+  <testsuite name="1 - Situacoes (situations) / Editar" id="a3b2c04c-9577-42e3-958a-58c0a080dd3e" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.034">
+    <testcase name="Status 200" time="0.034" classname="1SituacoesSituationsEditar"/>
+    <testcase name="Campo alterado" time="0.034" classname="1SituacoesSituationsEditar"/>
+  </testsuite>
+  <testsuite name="1 - Situacoes (situations) / Excluir" id="db7c06e1-6986-40bb-be83-985c1415ed18" timestamp="2026-10-22T02:57:06.710Z" tests="1" failures="0" errors="0" time="0.025">
+    <testcase name="Status 204" time="0.025" classname="1SituacoesSituationsExcluir"/>
+  </testsuite>
+  <testsuite name="1 - Situacoes (situations) / Erro - buscar registro excluido" id="60b6189e-889d-4ed6-bf7e-d6249b9f0dd8" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.005">
+    <testcase name="Status 404" time="0.005" classname="1SituacoesSituationsErroBuscarRegistroExcluido"/>
+    <testcase name="Mensagem de erro: Situacao nao encontrada." time="0.005" classname="1SituacoesSituationsErroBuscarRegistroExcluido"/>
+  </testsuite>
+  <testsuite name="1 - Situacoes (situations) / Erro - cadastrar sem nameSituation" id="4e661788-deb8-4a49-a45f-8c8e8571a92e" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="Status 400" time="0.002" classname="1SituacoesSituationsErroCadastrarSemNameSituation"/>
+    <testcase name="Mensagem de erro: O campo nameSituation e obrigatorio." time="0.002" classname="1SituacoesSituationsErroCadastrarSemNameSituation"/>
+  </testsuite>
+  <testsuite name="1 - Situacoes (situations) / Erro - id invalido" id="a9764e7b-0bdb-4a6e-b662-7396c5af1449" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="Status 400" time="0.002" classname="1SituacoesSituationsErroIdInvalido"/>
+    <testcase name="Mensagem de erro: O id informado e invalido." time="0.002" classname="1SituacoesSituationsErroIdInvalido"/>
+  </testsuite>
+  <testsuite name="2 - Usuarios (users) / Listar (paginado)" id="37fd2b25-a0e6-4f59-a7a5-7130b5552a9c" timestamp="2026-10-22T02:57:06.710Z" tests="3" failures="0" errors="0" time="0.004">
+    <testcase name="Status 200" time="0.004" classname="2UsuariosUsersListarPaginado"/>
+    <testcase name="Retorna data e pagination" time="0.004" classname="2UsuariosUsersListarPaginado"/>
+    <testcase name="Cada usuario vem com a situacao" time="0.004" classname="2UsuariosUsersListarPaginado"/>
+  </testsuite>
+  <testsuite name="2 - Usuarios (users) / Cadastrar" id="ec093b41-c009-49a0-a126-5bbc22d6e1a6" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.039">
+    <testcase name="Status 201" time="0.039" classname="2UsuariosUsersCadastrar"/>
+    <testcase name="Retorna o usuario com a situacao" time="0.039" classname="2UsuariosUsersCadastrar"/>
+  </testsuite>
+  <testsuite name="2 - Usuarios (users) / Buscar por id" id="ed9e37a8-d674-47e7-b5c7-607c2d452181" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.005">
+    <testcase name="Status 200" time="0.005" classname="2UsuariosUsersBuscarPorId"/>
+    <testcase name="Retorna o usuario pedido" time="0.005" classname="2UsuariosUsersBuscarPorId"/>
+  </testsuite>
+  <testsuite name="2 - Usuarios (users) / Editar" id="1e6beb22-f049-45e3-b60f-f49a00cf5b9e" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.037">
+    <testcase name="Status 200" time="0.037" classname="2UsuariosUsersEditar"/>
+    <testcase name="Campos alterados" time="0.037" classname="2UsuariosUsersEditar"/>
+  </testsuite>
+  <testsuite name="2 - Usuarios (users) / Erro - e-mail ja cadastrado" id="a48b60d1-5fc6-44af-b2ff-13dee91eaefc" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.007">
+    <testcase name="Status 409" time="0.007" classname="2UsuariosUsersErroEMailJaCadastrado"/>
+    <testcase name="Mensagem de erro: Ja existe um usuario com esse e-mail." time="0.007" classname="2UsuariosUsersErroEMailJaCadastrado"/>
+  </testsuite>
+  <testsuite name="2 - Usuarios (users) / Erro - e-mail invalido" id="96cfe1aa-32ef-4a57-a608-66b87a4ef9c3" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="Status 400" time="0.002" classname="2UsuariosUsersErroEMailInvalido"/>
+    <testcase name="Mensagem de erro: O e-mail informado e invalido." time="0.002" classname="2UsuariosUsersErroEMailInvalido"/>
+  </testsuite>
+  <testsuite name="2 - Usuarios (users) / Erro - situacao inexistente" id="a59b6056-e281-4a04-834b-4fd753080fe8" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="Status 404" time="0.004" classname="2UsuariosUsersErroSituacaoInexistente"/>
+    <testcase name="Mensagem de erro: A situacao informada nao existe." time="0.004" classname="2UsuariosUsersErroSituacaoInexistente"/>
+  </testsuite>
+  <testsuite name="2 - Usuarios (users) / Erro - campos obrigatorios" id="6d2aecfe-a000-439b-b0fd-99506c142aa4" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="Status 400" time="0.002" classname="2UsuariosUsersErroCamposObrigatorios"/>
+    <testcase name="Mensagem de erro: Os campos name, email e situationId sao obrigatorios." time="0.002" classname="2UsuariosUsersErroCamposObrigatorios"/>
+  </testsuite>
+  <testsuite name="2 - Usuarios (users) / Excluir" id="4e061f1a-2645-45ff-8bae-a7b4a311cc8b" timestamp="2026-10-22T02:57:06.710Z" tests="1" failures="0" errors="0" time="0.026">
+    <testcase name="Status 204" time="0.026" classname="2UsuariosUsersExcluir"/>
+  </testsuite>
+  <testsuite name="2 - Usuarios (users) / Erro - buscar usuario excluido" id="ce63a612-96d0-4e87-a4b1-31eb98df418f" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.006">
+    <testcase name="Status 404" time="0.006" classname="2UsuariosUsersErroBuscarUsuarioExcluido"/>
+    <testcase name="Mensagem de erro: Usuario nao encontrado." time="0.006" classname="2UsuariosUsersErroBuscarUsuarioExcluido"/>
+  </testsuite>
+  <testsuite name="3 - Categorias de produto (product-categories) / Listar (paginado)" id="d187b5c4-5ba9-49d1-8776-e989e1e97d66" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.006">
+    <testcase name="Status 200" time="0.006" classname="3CategoriasDeProdutoProductCategoriesListarPaginado"/>
+    <testcase name="Retorna data e pagination" time="0.006" classname="3CategoriasDeProdutoProductCategoriesListarPaginado"/>
+  </testsuite>
+  <testsuite name="3 - Categorias de produto (product-categories) / Cadastrar" id="15dcfb24-a687-4edc-a482-d4712524ad26" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.021">
+    <testcase name="Status 201" time="0.021" classname="3CategoriasDeProdutoProductCategoriesCadastrar"/>
+    <testcase name="Retorna o registro cadastrado" time="0.021" classname="3CategoriasDeProdutoProductCategoriesCadastrar"/>
+  </testsuite>
+  <testsuite name="3 - Categorias de produto (product-categories) / Buscar por id" id="d32ec165-7031-47e7-ac98-3c23e644586d" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.003">
+    <testcase name="Status 200" time="0.003" classname="3CategoriasDeProdutoProductCategoriesBuscarPorId"/>
+    <testcase name="Retorna o registro pedido" time="0.003" classname="3CategoriasDeProdutoProductCategoriesBuscarPorId"/>
+  </testsuite>
+  <testsuite name="3 - Categorias de produto (product-categories) / Editar" id="7ba021c3-b801-427b-98f2-8cceba5b90d6" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.028">
+    <testcase name="Status 200" time="0.028" classname="3CategoriasDeProdutoProductCategoriesEditar"/>
+    <testcase name="Campo alterado" time="0.028" classname="3CategoriasDeProdutoProductCategoriesEditar"/>
+  </testsuite>
+  <testsuite name="3 - Categorias de produto (product-categories) / Excluir" id="fecae39d-8e60-45aa-88c6-19cd7e21092c" timestamp="2026-10-22T02:57:06.710Z" tests="1" failures="0" errors="0" time="0.032">
+    <testcase name="Status 204" time="0.032" classname="3CategoriasDeProdutoProductCategoriesExcluir"/>
+  </testsuite>
+  <testsuite name="3 - Categorias de produto (product-categories) / Erro - buscar registro excluido" id="e5e42a16-9461-4dcd-ae5a-80bc29d0bf4d" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="Status 404" time="0.004" classname="3CategoriasDeProdutoProductCategoriesErroBuscarRegistroExcluido"/>
+    <testcase name="Mensagem de erro: Categoria nao encontrada." time="0.004" classname="3CategoriasDeProdutoProductCategoriesErroBuscarRegistroExcluido"/>
+  </testsuite>
+  <testsuite name="3 - Categorias de produto (product-categories) / Erro - cadastrar sem name" id="e1c1fdfa-371b-429c-93c1-00ce6bc80ad6" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.001">
+    <testcase name="Status 400" time="0.001" classname="3CategoriasDeProdutoProductCategoriesErroCadastrarSemName"/>
+    <testcase name="Mensagem de erro: O campo name e obrigatorio." time="0.001" classname="3CategoriasDeProdutoProductCategoriesErroCadastrarSemName"/>
+  </testsuite>
+  <testsuite name="3 - Categorias de produto (product-categories) / Erro - id invalido" id="4b62e653-6dcb-4113-9db1-ece7e6485ee8" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.001">
+    <testcase name="Status 400" time="0.001" classname="3CategoriasDeProdutoProductCategoriesErroIdInvalido"/>
+    <testcase name="Mensagem de erro: O id informado e invalido." time="0.001" classname="3CategoriasDeProdutoProductCategoriesErroIdInvalido"/>
+  </testsuite>
+  <testsuite name="4 - Situacoes de produto (product-situations) / Listar (paginado)" id="1aa85116-1c5d-495f-9fba-439eec675124" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.003">
+    <testcase name="Status 200" time="0.003" classname="4SituacoesDeProdutoProductSituationsListarPaginado"/>
+    <testcase name="Retorna data e pagination" time="0.003" classname="4SituacoesDeProdutoProductSituationsListarPaginado"/>
+  </testsuite>
+  <testsuite name="4 - Situacoes de produto (product-situations) / Cadastrar" id="b325fe59-372b-415e-93af-259c23ed8be3" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.019">
+    <testcase name="Status 201" time="0.019" classname="4SituacoesDeProdutoProductSituationsCadastrar"/>
+    <testcase name="Retorna o registro cadastrado" time="0.019" classname="4SituacoesDeProdutoProductSituationsCadastrar"/>
+  </testsuite>
+  <testsuite name="4 - Situacoes de produto (product-situations) / Buscar por id" id="8114a2aa-0ee1-4e82-ad92-59090d71ddf2" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.003">
+    <testcase name="Status 200" time="0.003" classname="4SituacoesDeProdutoProductSituationsBuscarPorId"/>
+    <testcase name="Retorna o registro pedido" time="0.003" classname="4SituacoesDeProdutoProductSituationsBuscarPorId"/>
+  </testsuite>
+  <testsuite name="4 - Situacoes de produto (product-situations) / Editar" id="4bc2090b-36f1-42f7-97a1-7393aa12b2c5" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.028">
+    <testcase name="Status 200" time="0.028" classname="4SituacoesDeProdutoProductSituationsEditar"/>
+    <testcase name="Campo alterado" time="0.028" classname="4SituacoesDeProdutoProductSituationsEditar"/>
+  </testsuite>
+  <testsuite name="4 - Situacoes de produto (product-situations) / Excluir" id="960712e2-ace5-4f88-83f7-dd8233b33c5a" timestamp="2026-10-22T02:57:06.710Z" tests="1" failures="0" errors="0" time="0.023">
+    <testcase name="Status 204" time="0.023" classname="4SituacoesDeProdutoProductSituationsExcluir"/>
+  </testsuite>
+  <testsuite name="4 - Situacoes de produto (product-situations) / Erro - buscar registro excluido" id="be7a1055-781f-471b-873f-54feb6612673" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="Status 404" time="0.004" classname="4SituacoesDeProdutoProductSituationsErroBuscarRegistroExcluido"/>
+    <testcase name="Mensagem de erro: Situacao de produto nao encontrada." time="0.004" classname="4SituacoesDeProdutoProductSituationsErroBuscarRegistroExcluido"/>
+  </testsuite>
+  <testsuite name="4 - Situacoes de produto (product-situations) / Erro - cadastrar sem name" id="9e2320ef-0ead-40fe-99d0-5dc8406d7dbb" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="Status 400" time="0.002" classname="4SituacoesDeProdutoProductSituationsErroCadastrarSemName"/>
+    <testcase name="Mensagem de erro: O campo name e obrigatorio." time="0.002" classname="4SituacoesDeProdutoProductSituationsErroCadastrarSemName"/>
+  </testsuite>
+  <testsuite name="4 - Situacoes de produto (product-situations) / Erro - id invalido" id="ea8508aa-1008-455f-849e-b0655ad6fd21" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="Status 400" time="0.002" classname="4SituacoesDeProdutoProductSituationsErroIdInvalido"/>
+    <testcase name="Mensagem de erro: O id informado e invalido." time="0.002" classname="4SituacoesDeProdutoProductSituationsErroIdInvalido"/>
+  </testsuite>
+  <testsuite name="5 - Produtos (products) / Listar (paginado)" id="d0b7e176-3b15-443d-896a-1b508d37a49d" timestamp="2026-10-22T02:57:06.710Z" tests="3" failures="0" errors="0" time="0.006">
+    <testcase name="Status 200" time="0.006" classname="5ProdutosProductsListarPaginado"/>
+    <testcase name="Retorna data e pagination" time="0.006" classname="5ProdutosProductsListarPaginado"/>
+    <testcase name="Cada produto vem com categoria e situacao" time="0.006" classname="5ProdutosProductsListarPaginado"/>
+  </testsuite>
+  <testsuite name="5 - Produtos (products) / Listar pagina 2 com limit 2" id="28640372-3f89-4f1c-bb63-aeff19f9089d" timestamp="2026-10-22T02:57:06.710Z" tests="3" failures="0" errors="0" time="0.007">
+    <testcase name="Status 200" time="0.007" classname="5ProdutosProductsListarPagina2ComLimit2"/>
+    <testcase name="Retorna data e pagination" time="0.007" classname="5ProdutosProductsListarPagina2ComLimit2"/>
+    <testcase name="Respeita page e limit" time="0.007" classname="5ProdutosProductsListarPagina2ComLimit2"/>
+  </testsuite>
+  <testsuite name="5 - Produtos (products) / Listar com limit acima do maximo" id="ce1143f4-8161-4c34-b8b9-91a2a19b6430" timestamp="2026-10-22T02:57:06.710Z" tests="3" failures="0" errors="0" time="0.006">
+    <testcase name="Status 200" time="0.006" classname="5ProdutosProductsListarComLimitAcimaDoMaximo"/>
+    <testcase name="Retorna data e pagination" time="0.006" classname="5ProdutosProductsListarComLimitAcimaDoMaximo"/>
+    <testcase name="Limit fica no maximo 100" time="0.006" classname="5ProdutosProductsListarComLimitAcimaDoMaximo"/>
+  </testsuite>
+  <testsuite name="5 - Produtos (products) / Filtrar por categoria e situacao" id="10b043ba-7d81-4aa2-be4d-07b23fce710d" timestamp="2026-10-22T02:57:06.710Z" tests="3" failures="0" errors="0" time="0.006">
+    <testcase name="Status 200" time="0.006" classname="5ProdutosProductsFiltrarPorCategoriaESituacao"/>
+    <testcase name="Retorna data e pagination" time="0.006" classname="5ProdutosProductsFiltrarPorCategoriaESituacao"/>
+    <testcase name="Todos os produtos sao da categoria 1 e situacao 1" time="0.006" classname="5ProdutosProductsFiltrarPorCategoriaESituacao"/>
+  </testsuite>
+  <testsuite name="5 - Produtos (products) / Cadastrar" id="fb74018d-28eb-4672-8c89-8ce15b43f0de" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.031">
+    <testcase name="Status 201" time="0.031" classname="5ProdutosProductsCadastrar"/>
+    <testcase name="Retorna o produto com categoria e situacao" time="0.031" classname="5ProdutosProductsCadastrar"/>
+  </testsuite>
+  <testsuite name="5 - Produtos (products) / Buscar por id" id="b03cbb10-8529-4bb2-a766-0efbf630088e" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.005">
+    <testcase name="Status 200" time="0.005" classname="5ProdutosProductsBuscarPorId"/>
+    <testcase name="Retorna o produto pedido" time="0.005" classname="5ProdutosProductsBuscarPorId"/>
+  </testsuite>
+  <testsuite name="5 - Produtos (products) / Editar" id="aee009d8-1916-49c6-a9bc-ebc6a98109ab" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.026">
+    <testcase name="Status 200" time="0.026" classname="5ProdutosProductsEditar"/>
+    <testcase name="Campos alterados" time="0.026" classname="5ProdutosProductsEditar"/>
+  </testsuite>
+  <testsuite name="5 - Produtos (products) / Erro - categoria inexistente" id="f383a4b0-2763-4721-a0ed-a207e98a2475" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.012">
+    <testcase name="Status 404" time="0.012" classname="5ProdutosProductsErroCategoriaInexistente"/>
+    <testcase name="Mensagem de erro: A categoria informada nao existe." time="0.012" classname="5ProdutosProductsErroCategoriaInexistente"/>
+  </testsuite>
+  <testsuite name="5 - Produtos (products) / Erro - situacao de produto inexistente" id="16c21be4-facb-4b33-93dd-b3a2a1acc23b" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.005">
+    <testcase name="Status 404" time="0.005" classname="5ProdutosProductsErroSituacaoDeProdutoInexistente"/>
+    <testcase name="Mensagem de erro: A situacao de produto informada nao existe." time="0.005" classname="5ProdutosProductsErroSituacaoDeProdutoInexistente"/>
+  </testsuite>
+  <testsuite name="5 - Produtos (products) / Erro - campos obrigatorios" id="cb531640-8706-404a-bfe1-0f6316219d93" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.002">
+    <testcase name="Status 400" time="0.002" classname="5ProdutosProductsErroCamposObrigatorios"/>
+    <testcase name="Mensagem de erro: Os campos name, productSituationId e productCategoryId sao obrigatorios." time="0.002" classname="5ProdutosProductsErroCamposObrigatorios"/>
+  </testsuite>
+  <testsuite name="5 - Produtos (products) / Excluir" id="b672de79-2d58-4629-8714-bcb3eb5dc3ab" timestamp="2026-10-22T02:57:06.710Z" tests="1" failures="0" errors="0" time="0.043">
+    <testcase name="Status 204" time="0.043" classname="5ProdutosProductsExcluir"/>
+  </testsuite>
+  <testsuite name="5 - Produtos (products) / Erro - buscar produto excluido" id="286f95c0-e559-4604-9d3d-12aa627bd71e" timestamp="2026-10-22T02:57:06.710Z" tests="2" failures="0" errors="0" time="0.004">
+    <testcase name="Status 404" time="0.004" classname="5ProdutosProductsErroBuscarProdutoExcluido"/>
+    <testcase name="Mensagem de erro: Produto nao encontrado." time="0.004" classname="5ProdutosProductsErroBuscarProdutoExcluido"/>
+  </testsuite>
+</testsuites>

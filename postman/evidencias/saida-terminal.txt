@@ -1,0 +1,273 @@
+(node:33320) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+newman
+
+NodeAPI - CRUD (Situacoes, Usuarios, Produtos)
+
+□ 0 - API
+└ Status da API
+  GET http://localhost:3000/ [200 OK, 366B, 34ms]
+  √  Status 200
+  √  Lista as rotas disponiveis
+
+└ Erro - rota inexistente
+  GET http://localhost:3000/rota-inexistente [404 Not Found, 298B, 3ms]
+  √  Status 404
+  √  Mensagem de erro: Rota nao encontrada: GET /rota-inexistente
+
+□ 1 - Situacoes (situations)
+└ Listar (paginado)
+  GET http://localhost:3000/situations?page=1&limit=10 [200 OK, 690B, 6ms]
+  √  Status 200
+  √  Retorna data e pagination
+
+└ Cadastrar
+  POST http://localhost:3000/situations [201 Created, 354B, 47ms]
+  √  Status 201
+  √  Retorna o registro cadastrado
+
+└ Buscar por id
+  GET http://localhost:3000/situations/8 [200 OK, 349B, 4ms]
+  √  Status 200
+  √  Retorna o registro pedido
+
+└ Editar
+  PUT http://localhost:3000/situations/8 [200 OK, 351B, 34ms]
+  √  Status 200
+  √  Campo alterado
+
+└ Excluir
+  DELETE http://localhost:3000/situations/8 [204 No Content, 134B, 25ms]
+  √  Status 204
+
+└ Erro - buscar registro excluido
+  GET http://localhost:3000/situations/8 [404 Not Found, 280B, 5ms]
+  √  Status 404
+  √  Mensagem de erro: Situacao nao encontrada.
+
+└ Erro - cadastrar sem nameSituation
+  POST http://localhost:3000/situations [400 Bad Request, 294B, 2ms]
+  √  Status 400
+  √  Mensagem de erro: O campo nameSituation e obrigatorio.
+
+└ Erro - id invalido
+  GET http://localhost:3000/situations/abc [400 Bad Request, 284B, 2ms]
+  √  Status 400
+  √  Mensagem de erro: O id informado e invalido.
+
+□ 2 - Usuarios (users)
+└ Listar (paginado)
+  GET http://localhost:3000/users?page=1&limit=10 [200 OK, 1.44kB, 4ms]
+  √  Status 200
+  √  Retorna data e pagination
+  √  Cada usuario vem com a situacao
+
+└ Cadastrar
+  POST http://localhost:3000/users [201 Created, 533B, 39ms]
+  √  Status 201
+  √  Retorna o usuario com a situacao
+
+└ Buscar por id
+  GET http://localhost:3000/users/9 [200 OK, 528B, 5ms]
+  √  Status 200
+  √  Retorna o usuario pedido
+
+└ Editar
+  PUT http://localhost:3000/users/9 [200 OK, 538B, 37ms]
+  √  Status 200
+  √  Campos alterados
+
+└ Erro - e-mail ja cadastrado
+  POST http://localhost:3000/users [409 Conflict, 292B, 7ms]
+  √  Status 409
+  √  Mensagem de erro: Ja existe um usuario com esse e-mail.
+
+└ Erro - e-mail invalido
+  POST http://localhost:3000/users [400 Bad Request, 288B, 2ms]
+  √  Status 400
+  √  Mensagem de erro: O e-mail informado e invalido.
+
+└ Erro - situacao inexistente
+  POST http://localhost:3000/users [404 Not Found, 288B, 4ms]
+  √  Status 404
+  √  Mensagem de erro: A situacao informada nao existe.
+
+└ Erro - campos obrigatorios
+  POST http://localhost:3000/users [400 Bad Request, 311B, 2ms]
+  √  Status 400
+  √  Mensagem de erro: Os campos name, email e situationId sao obrigatorios.
+
+└ Excluir
+  DELETE http://localhost:3000/users/9 [204 No Content, 134B, 26ms]
+  √  Status 204
+
+└ Erro - buscar usuario excluido
+  GET http://localhost:3000/users/9 [404 Not Found, 279B, 6ms]
+  √  Status 404
+  √  Mensagem de erro: Usuario nao encontrado.
+
+□ 3 - Categorias de produto (product-categories)
+└ Listar (paginado)
+  GET http://localhost:3000/product-categories?page=1&limit=10 [200 OK, 781B, 6ms]
+  √  Status 200
+  √  Retorna data e pagination
+
+└ Cadastrar
+  POST http://localhost:3000/product-categories [201 Created, 345B, 21ms]
+  √  Status 201
+  √  Retorna o registro cadastrado
+
+└ Buscar por id
+  GET http://localhost:3000/product-categories/9 [200 OK, 340B, 3ms]
+  √  Status 200
+  √  Retorna o registro pedido
+
+└ Editar
+  PUT http://localhost:3000/product-categories/9 [200 OK, 347B, 28ms]
+  √  Status 200
+  √  Campo alterado
+
+└ Excluir
+  DELETE http://localhost:3000/product-categories/9 [204 No Content, 134B, 32ms]
+  √  Status 204
+
+└ Erro - buscar registro excluido
+  GET http://localhost:3000/product-categories/9 [404 Not Found, 281B, 4ms]
+  √  Status 404
+  √  Mensagem de erro: Categoria nao encontrada.
+
+└ Erro - cadastrar sem name
+  POST http://localhost:3000/product-categories [400 Bad Request, 285B, 1ms]
+  √  Status 400
+  √  Mensagem de erro: O campo name e obrigatorio.
+
+└ Erro - id invalido
+  GET http://localhost:3000/product-categories/abc [400 Bad Request, 284B, 1ms]
+  √  Status 400
+  √  Mensagem de erro: O id informado e invalido.
+
+□ 4 - Situacoes de produto (product-situations)
+└ Listar (paginado)
+  GET http://localhost:3000/product-situations?page=1&limit=10 [200 OK, 673B, 3ms]
+  √  Status 200
+  √  Retorna data e pagination
+
+└ Cadastrar
+  POST http://localhost:3000/product-situations [201 Created, 348B, 19ms]
+  √  Status 201
+  √  Retorna o registro cadastrado
+
+└ Buscar por id
+  GET http://localhost:3000/product-situations/8 [200 OK, 343B, 3ms]
+  √  Status 200
+  √  Retorna o registro pedido
+
+└ Editar
+  PUT http://localhost:3000/product-situations/8 [200 OK, 341B, 28ms]
+  √  Status 200
+  √  Campo alterado
+
+└ Excluir
+  DELETE http://localhost:3000/product-situations/8 [204 No Content, 134B, 23ms]
+  √  Status 204
+
+└ Erro - buscar registro excluido
+  GET http://localhost:3000/product-situations/8 [404 Not Found, 291B, 4ms]
+  √  Status 404
+  √  Mensagem de erro: Situacao de produto nao encontrada.
+
+└ Erro - cadastrar sem name
+  POST http://localhost:3000/product-situations [400 Bad Request, 285B, 2ms]
+  √  Status 400
+  √  Mensagem de erro: O campo name e obrigatorio.
+
+└ Erro - id invalido
+  GET http://localhost:3000/product-situations/abc [400 Bad Request, 284B, 2ms]
+  √  Status 400
+  √  Mensagem de erro: O id informado e invalido.
+
+□ 5 - Produtos (products)
+└ Listar (paginado)
+  GET http://localhost:3000/products?page=1&limit=10 [200 OK, 2.41kB, 6ms]
+  √  Status 200
+  √  Retorna data e pagination
+  √  Cada produto vem com categoria e situacao
+
+└ Listar pagina 2 com limit 2
+  GET http://localhost:3000/products?page=2&limit=2 [200 OK, 1.17kB, 7ms]
+  √  Status 200
+  √  Retorna data e pagination
+  √  Respeita page e limit
+
+└ Listar com limit acima do maximo
+  GET http://localhost:3000/products?limit=500 [200 OK, 2.41kB, 6ms]
+  √  Status 200
+  √  Retorna data e pagination
+  √  Limit fica no maximo 100
+
+└ Filtrar por categoria e situacao
+  GET http://localhost:3000/products?productCategoryId=1&productSituationId=1 [200 OK, 1.17kB, 6ms]
+  √  Status 200
+  √  Retorna data e pagination
+  √  Todos os produtos sao da categoria 1 e situacao 1
+
+└ Cadastrar
+  POST http://localhost:3000/products [201 Created, 649B, 31ms]
+  √  Status 201
+  √  Retorna o produto com categoria e situacao
+
+└ Buscar por id
+  GET http://localhost:3000/products/10 [200 OK, 644B, 5ms]
+  √  Status 200
+  √  Retorna o produto pedido
+
+└ Editar
+  PUT http://localhost:3000/products/10 [200 OK, 649B, 26ms]
+  √  Status 200
+  √  Campos alterados
+
+└ Erro - categoria inexistente
+  POST http://localhost:3000/products [404 Not Found, 289B, 12ms]
+  √  Status 404
+  √  Mensagem de erro: A categoria informada nao existe.
+
+└ Erro - situacao de produto inexistente
+  POST http://localhost:3000/products [404 Not Found, 299B, 5ms]
+  √  Status 404
+  √  Mensagem de erro: A situacao de produto informada nao existe.
+
+└ Erro - campos obrigatorios
+  POST http://localhost:3000/products [400 Bad Request, 330B, 2ms]
+  √  Status 400
+  √  Mensagem de erro: Os campos name, productSituationId e productCategoryId sao obrigatorios.
+
+└ Excluir
+  DELETE http://localhost:3000/products/10 [204 No Content, 134B, 43ms]
+  √  Status 204
+
+└ Erro - buscar produto excluido
+  GET http://localhost:3000/products/10 [404 Not Found, 279B, 4ms]
+  √  Status 404
+  √  Mensagem de erro: Produto nao encontrado.
+
+┌─────────────────────────┬──────────────────┬──────────────────┐
+│                         │         executed │           failed │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              iterations │                1 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│                requests │               48 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│            test-scripts │               48 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│      prerequest-scripts │                1 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              assertions │               96 │                0 │
+├─────────────────────────┴──────────────────┴──────────────────┤
+│ total run duration: 4.7s                                      │
+├───────────────────────────────────────────────────────────────┤
+│ total data received: 12.96kB (approx)                         │
+├───────────────────────────────────────────────────────────────┤
+│ average response time: 13ms [min: 1ms, max: 47ms, s.d.: 13ms] │
+└───────────────────────────────────────────────────────────────┘
+
+prints: 48 | requests 48 (falhas 0) | assertions 96 (falhas 0)
