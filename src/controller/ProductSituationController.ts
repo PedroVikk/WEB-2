@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ProductSituationService } from "../service/ProductSituationService";
 import { getPaginationParams } from "../helper/pagination";
+import { getIdParam } from "../helper/params";
 
 const productSituationService = new ProductSituationService();
 
@@ -20,7 +21,7 @@ export class ProductSituationController {
   // GET /product-situations/:id
   async show(req: Request, res: Response, next: NextFunction) {
     try {
-      const situation = await productSituationService.findById(Number(req.params.id));
+      const situation = await productSituationService.findById(getIdParam(req.params.id));
 
       return res.status(200).json(situation);
     } catch (error) {
@@ -43,7 +44,7 @@ export class ProductSituationController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const situation = await productSituationService.update(
-        Number(req.params.id),
+        getIdParam(req.params.id),
         req.body
       );
 
@@ -56,7 +57,7 @@ export class ProductSituationController {
   // DELETE /product-situations/:id
   async destroy(req: Request, res: Response, next: NextFunction) {
     try {
-      await productSituationService.delete(Number(req.params.id));
+      await productSituationService.delete(getIdParam(req.params.id));
 
       return res.status(204).send();
     } catch (error) {

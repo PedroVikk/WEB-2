@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ProductService } from "../service/ProductService";
 import { getPaginationParams } from "../helper/pagination";
+import { getIdParam } from "../helper/params";
 
 const productService = new ProductService();
 
@@ -28,7 +29,7 @@ export class ProductController {
   // GET /products/:id
   async show(req: Request, res: Response, next: NextFunction) {
     try {
-      const product = await productService.findById(Number(req.params.id));
+      const product = await productService.findById(getIdParam(req.params.id));
 
       return res.status(200).json(product);
     } catch (error) {
@@ -51,7 +52,7 @@ export class ProductController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const product = await productService.update(
-        Number(req.params.id),
+        getIdParam(req.params.id),
         req.body
       );
 
@@ -64,7 +65,7 @@ export class ProductController {
   // DELETE /products/:id
   async destroy(req: Request, res: Response, next: NextFunction) {
     try {
-      await productService.delete(Number(req.params.id));
+      await productService.delete(getIdParam(req.params.id));
 
       return res.status(204).send();
     } catch (error) {

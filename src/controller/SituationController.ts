@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { SituationService } from "../service/SituationService";
 import { getPaginationParams } from "../helper/pagination";
+import { getIdParam } from "../helper/params";
 
 const situationService = new SituationService();
 
@@ -20,7 +21,7 @@ export class SituationController {
   // GET /situations/:id
   async show(req: Request, res: Response, next: NextFunction) {
     try {
-      const situation = await situationService.findById(Number(req.params.id));
+      const situation = await situationService.findById(getIdParam(req.params.id));
 
       return res.status(200).json(situation);
     } catch (error) {
@@ -43,7 +44,7 @@ export class SituationController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const situation = await situationService.update(
-        Number(req.params.id),
+        getIdParam(req.params.id),
         req.body
       );
 
@@ -56,7 +57,7 @@ export class SituationController {
   // DELETE /situations/:id
   async destroy(req: Request, res: Response, next: NextFunction) {
     try {
-      await situationService.delete(Number(req.params.id));
+      await situationService.delete(getIdParam(req.params.id));
 
       return res.status(204).send();
     } catch (error) {

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ProductCategoryService } from "../service/ProductCategoryService";
 import { getPaginationParams } from "../helper/pagination";
+import { getIdParam } from "../helper/params";
 
 const categoryService = new ProductCategoryService();
 
@@ -20,7 +21,7 @@ export class ProductCategoryController {
   // GET /product-categories/:id
   async show(req: Request, res: Response, next: NextFunction) {
     try {
-      const category = await categoryService.findById(Number(req.params.id));
+      const category = await categoryService.findById(getIdParam(req.params.id));
 
       return res.status(200).json(category);
     } catch (error) {
@@ -43,7 +44,7 @@ export class ProductCategoryController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const category = await categoryService.update(
-        Number(req.params.id),
+        getIdParam(req.params.id),
         req.body
       );
 
@@ -56,7 +57,7 @@ export class ProductCategoryController {
   // DELETE /product-categories/:id
   async destroy(req: Request, res: Response, next: NextFunction) {
     try {
-      await categoryService.delete(Number(req.params.id));
+      await categoryService.delete(getIdParam(req.params.id));
 
       return res.status(204).send();
     } catch (error) {

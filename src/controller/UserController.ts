@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { UserService } from "../service/UserService";
 import { getPaginationParams } from "../helper/pagination";
+import { getIdParam } from "../helper/params";
 
 const userService = new UserService();
 
@@ -20,7 +21,7 @@ export class UserController {
   // GET /users/:id
   async show(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await userService.findById(Number(req.params.id));
+      const user = await userService.findById(getIdParam(req.params.id));
 
       return res.status(200).json(user);
     } catch (error) {
@@ -43,7 +44,7 @@ export class UserController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await userService.update(
-        Number(req.params.id),
+        getIdParam(req.params.id),
         req.body
       );
 
@@ -56,7 +57,7 @@ export class UserController {
   // DELETE /users/:id
   async destroy(req: Request, res: Response, next: NextFunction) {
     try {
-      await userService.delete(Number(req.params.id));
+      await userService.delete(getIdParam(req.params.id));
 
       return res.status(204).send();
     } catch (error) {
