@@ -195,12 +195,8 @@ requests seguintes. A URL da API fica na variavel `baseUrl` (padrao `http://loca
 ### Evidencias da execucao
 
 A colecao foi executada inteira com o Newman (Postman pela linha de comando):
-48 requests e 96 testes, todos aprovados. O resultado esta em `postman/evidencias/`:
-
-* `prints/` -> um print de cada request (metodo, URL, body enviado, status, resposta e testes)
-* `relatorio-testes.html` -> relatorio completo, abrir no navegador
-* `relatorio-testes.xml` -> relatorio no formato JUnit
-* `saida-terminal.txt` -> saida do Newman no terminal
+48 requests e 96 testes, todos aprovados. Em `postman/evidencias/prints/` esta um print de
+cada request (metodo, URL, body enviado, status, resposta e testes).
 
 ## Sequencia para criar projeto
 
