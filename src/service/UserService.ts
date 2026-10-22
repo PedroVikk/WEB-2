@@ -80,11 +80,13 @@ export class UserService {
       throw new AppError("Ja existe um usuario com esse e-mail.", 409);
     }
 
-    user.name = data.name;
-    user.email = data.email;
-    user.situationId = Number(data.situationId);
-
-    await this.repository.save(user);
+    // update grava direto as colunas; com save a relacao carregada no findById
+    // sobrescreveria o situationId novo
+    await this.repository.update(user.id, {
+      name: data.name,
+      email: data.email,
+      situationId: Number(data.situationId),
+    });
 
     return this.findById(user.id);
   }

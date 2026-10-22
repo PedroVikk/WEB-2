@@ -92,11 +92,13 @@ export class ProductService {
 
     await this.validate(data);
 
-    product.name = data.name;
-    product.productSituationId = Number(data.productSituationId);
-    product.productCategoryId = Number(data.productCategoryId);
-
-    await this.repository.save(product);
+    // update grava direto as colunas; com save as relacoes carregadas no findById
+    // sobrescreveriam os ids novos
+    await this.repository.update(product.id, {
+      name: data.name,
+      productSituationId: Number(data.productSituationId),
+      productCategoryId: Number(data.productCategoryId),
+    });
 
     return this.findById(product.id);
   }
